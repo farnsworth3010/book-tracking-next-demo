@@ -7,8 +7,6 @@ const rootReducer = combineSlices(uiSlice)
 // A factory so every test gets a fresh store
 export const makeStore = () => configureStore({ reducer: rootReducer })
 
-export const store = makeStore()
-
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = ReturnType<typeof makeStore>['dispatch']
 

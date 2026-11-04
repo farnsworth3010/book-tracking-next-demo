@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { useUpdateBook } from './queries'
@@ -11,7 +11,7 @@ export function BookCard({ book }: { book: Book }) {
     <Card className="h-full">
       <CardHeader>
         <CardTitle>
-          <Link to={`/books/${book.id}`} className="hover:underline">
+          <Link href={`/books/${book.id}`} className="hover:underline">
             {book.title}
           </Link>
         </CardTitle>

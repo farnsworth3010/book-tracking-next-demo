@@ -1,11 +1,13 @@
-import { useNavigate } from 'react-router'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { Message } from '@/components/Message'
 import { Card, CardContent } from '@/components/ui/card'
 import { BookForm } from '@/features/books/BookForm'
 import { useCreateBook } from '@/features/books/queries'
 
-export default function NewBookPage() {
-  const navigate = useNavigate()
+export function NewBookPage() {
+  const router = useRouter()
   const createBook = useCreateBook()
 
   return (
@@ -16,7 +18,7 @@ export default function NewBookPage() {
           <BookForm
             submitLabel="Save book"
             pending={createBook.isPending}
-            onSubmit={(values) => createBook.mutate(values, { onSuccess: () => navigate('/') })}
+            onSubmit={(values) => createBook.mutate(values, { onSuccess: () => router.push('/') })}
           />
         </CardContent>
       </Card>

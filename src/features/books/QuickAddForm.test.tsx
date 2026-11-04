@@ -2,7 +2,8 @@ import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createBook, fetchBooks } from '@/features/books/api'
 import { makeBook } from '@/test/fixtures'
-import { renderRoute } from '@/test/renderRoute'
+import { renderWithProviders } from '@/test/render'
+import { BooksPage } from '@/views/BooksPage'
 
 vi.mock('@/features/books/api')
 
@@ -13,7 +14,7 @@ beforeEach(() => {
 
 describe('QuickAddForm (TanStack Form)', () => {
   it('validates with the zod schema before submitting', async () => {
-    const { user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />)
 
     await user.click(screen.getByRole('button', { name: 'Quick add' }))
 
@@ -25,7 +26,7 @@ describe('QuickAddForm (TanStack Form)', () => {
 
   it('adds a book, clears the form and refreshes the list', async () => {
     vi.mocked(fetchBooks).mockResolvedValueOnce([]).mockResolvedValue([makeBook({ id: '42', title: 'Dune' })])
-    const { user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />)
     await screen.findByText('No books here yet.')
 
     await user.type(screen.getByLabelText('Title'), 'Dune')

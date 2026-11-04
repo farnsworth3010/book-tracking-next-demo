@@ -11,18 +11,18 @@
     {
       "title": "Refactoring",
       "author": "Martin Fowler",
-      "status": "reading",
+      "status": "want",
       "pages": 448,
       "notes": "",
       "id": "3"
     },
     {
-      "id": "4",
       "title": "Clean Architecture",
       "author": "Robert C. Martin",
-      "status": "done",
+      "status": "want",
       "pages": 432,
-      "notes": ""
+      "notes": "",
+      "id": "4"
     },
     {
       "id": "5",

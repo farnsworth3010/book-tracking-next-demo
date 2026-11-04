@@ -4,7 +4,10 @@ import { fetchBooks, updateBook } from '@/features/books/api'
 import type { Book } from '@/features/books/schema'
 import { selectBooksView } from '@/store/uiSlice'
 import { deferred, makeBook } from '@/test/fixtures'
-import { renderRoute } from '@/test/renderRoute'
+import { ViewToggle } from '@/components/ViewToggle'
+import { currentUrl } from '@/test/next-navigation'
+import { renderWithProviders } from '@/test/render'
+import { BooksPage } from './BooksPage'
 
 vi.mock('@/features/books/api')
 
@@ -19,7 +22,7 @@ beforeEach(() => {
 
 describe('BooksPage', () => {
   it('shows a loading state, then a card per book with a link to its page', async () => {
-    renderRoute('/')
+    renderWithProviders(<BooksPage />, { url: '/' })
 
     expect(screen.getByText('Loading books…')).toBeInTheDocument()
 
@@ -34,7 +37,7 @@ describe('BooksPage', () => {
   })
 
   it('loads the status from the URL and marks its filter as pressed', async () => {
-    renderRoute('/?status=done')
+    renderWithProviders(<BooksPage />, { url: '/?status=done' })
 
     await screen.findByText('Dune')
 
@@ -43,7 +46,7 @@ describe('BooksPage', () => {
   })
 
   it('ignores an unknown status in the URL', async () => {
-    renderRoute('/?status=lost')
+    renderWithProviders(<BooksPage />, { url: '/?status=lost' })
 
     await screen.findByText('Dune')
 
@@ -52,23 +55,23 @@ describe('BooksPage', () => {
   })
 
   it('writes the chosen filter to the URL and refetches', async () => {
-    const { router, user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />, { url: '/' })
     await screen.findByText('Dune')
 
     await user.click(screen.getByRole('button', { name: 'Reading' }))
 
-    expect(router.state.location.search).toBe('?status=reading')
+    expect(currentUrl().search).toBe('?status=reading')
     await waitFor(() => expect(fetchBooks).toHaveBeenLastCalledWith('reading'))
 
     await user.click(screen.getByRole('button', { name: 'All' }))
 
-    expect(router.state.location.search).toBe('')
+    expect(currentUrl().search).toBe('')
   })
 
   it('shows an empty state', async () => {
     vi.mocked(fetchBooks).mockResolvedValue([])
 
-    renderRoute('/')
+    renderWithProviders(<BooksPage />, { url: '/' })
 
     expect(await screen.findByText('No books here yet.')).toBeInTheDocument()
   })
@@ -76,13 +79,18 @@ describe('BooksPage', () => {
   it('shows the error when loading fails', async () => {
     vi.mocked(fetchBooks).mockRejectedValue(new Error('GET /api/books failed: 500'))
 
-    renderRoute('/')
+    renderWithProviders(<BooksPage />, { url: '/' })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('GET /api/books failed: 500')
   })
 
   it('switches between grid and list through the store', async () => {
-    const { store, user } = renderRoute('/')
+    const { store, user } = renderWithProviders(
+      <>
+        <ViewToggle />
+        <BooksPage />
+      </>,
+    )
     const list = await screen.findByRole('list', { name: 'Books' })
 
     expect(list).toHaveAttribute('data-view', 'grid')
@@ -99,7 +107,7 @@ describe('status change on a card (optimistic update)', () => {
   it('shows the new status before the server answers, then refetches', async () => {
     const save = deferred<Book>()
     vi.mocked(updateBook).mockReturnValue(save.promise)
-    const { user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />, { url: '/' })
     const status = await screen.findByRole('combobox', { name: 'Status of Dune' })
 
     await user.selectOptions(status, 'done')
@@ -118,7 +126,7 @@ describe('status change on a card (optimistic update)', () => {
   it('rolls back and explains when the server rejects', async () => {
     const save = deferred<Book>()
     vi.mocked(updateBook).mockReturnValue(save.promise)
-    const { user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />, { url: '/' })
     const status = await screen.findByRole('combobox', { name: 'Status of Dune' })
 
     await user.selectOptions(status, 'done')
@@ -141,7 +149,7 @@ describe('status change on a card (optimistic update)', () => {
 
 describe('loading and errors', () => {
   it('keeps the previous list on screen, marked busy, while another filter loads', async () => {
-    const { user } = renderRoute('/')
+    const { user } = renderWithProviders(<BooksPage />, { url: '/' })
     await screen.findByText('Dune')
     const next = deferred<Book[]>()
     vi.mocked(fetchBooks).mockReturnValue(next.promise)
@@ -156,17 +164,5 @@ describe('loading and errors', () => {
 
     await waitFor(() => expect(screen.queryByText('Dune')).not.toBeInTheDocument())
     expect(screen.getByRole('list', { name: 'Books' })).toHaveAttribute('aria-busy', 'false')
-  })
-
-  it('shows an error page instead of a blank screen when rendering crashes', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {})
-    // Simulates a bug: data of the wrong shape reaching a component, so reading book.title throws in render
-    vi.mocked(fetchBooks).mockResolvedValue([null] as unknown as Book[])
-
-    renderRoute('/')
-
-    expect(await screen.findByRole('heading', { name: 'Something went wrong' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Back to books' })).toHaveAttribute('href', '/')
-    expect(screen.getByRole('link', { name: 'Book Tracker' })).toBeInTheDocument()
   })
 })

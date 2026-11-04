@@ -16,8 +16,9 @@ knows Angular well and React only from the class-component era. The next stage i
 
 ## Roadmap
 
-1. Vite SPA on the stack below, step by step (current stage).
-2. Migration to Next.js.
+1. Vite SPA, step by step — done; the last SPA commit is tagged `vite-spa`.
+2. Migration to Next.js (current stage): App Router first with client pages, then Server Components,
+   Server Actions, streaming and caching.
 3. At the very end, architecture comparison: rebuild the same app in separate git branches, one per architecture
    (Feature-Sliced Design, Atomic Design, and others such as feature folders / layered), so the user can compare
    them side by side. Keep `main` on the current simple feature-folder layout until then.
@@ -26,45 +27,51 @@ knows Angular well and React only from the class-component era. The next stage i
 
 ```bash
 npm run api       # json-server on :3001 over db.json
-npm run dev       # Vite; /api/* is proxied to :3001
+npm run dev       # next dev; /api/* is rewritten to :3001 (next.config.ts)
 npx vitest run    # tests once (npm test = watch mode)
-npm run lint      # oxlint
-npm run build     # tsc -b + vite build
+npx tsc --noEmit  # type check (Vitest does not type check)
+npm run lint      # oxlint (react, typescript, nextjs plugins)
+npm run build     # next build (type checks with the local tsc CLI, TypeScript 7)
 ```
 
 ## Stack and where each library is used
 
 | Concern | Main choice | Demo-only alternative |
 |---|---|---|
-| Build | Vite | — |
-| Routing | React Router (`createBrowserRouter`, `RouterProvider` from `react-router/dom`) | — |
+| Framework | Next.js 16 App Router (Turbopack); docs for this exact version are in `node_modules/next/dist/docs/` | — |
+| Routing | File routes in `src/app/`; `next/link`, `next/navigation` (`useRouter`, `useSearchParams`, `useParams`) | — |
 | Server state | TanStack Query (`src/features/books/queries.ts`) | — |
 | Client state | Redux Toolkit (`src/store/`) | MobX (`src/features/reading-session/`) |
 | Forms | React Hook Form + Zod (`BookForm`) | TanStack Form (`QuickAddForm`) |
 | Validation | Zod (`src/features/books/schema.ts`), also for API responses and URL params | — |
 | UI kit | shadcn/ui in `src/components/ui/` (generated, Tailwind inside; add via `npx shadcn add <name>`) | — |
 | Own styles | Tailwind utilities in `className`, `cn` for conditional classes and overrides (no styled-components) | — |
-| Tests | Vitest + Testing Library (jsdom), tests next to the code as `*.test.ts(x)` | — |
+| Tests | Vitest + Testing Library (jsdom), tests next to the code; `next/navigation` and `next/link` are mocked in `src/test/setup.ts`, render with `renderWithProviders` | — |
 | Mock backend | json-server v1 (`db.json`, string ids, `?field=value` filters) | — |
 
 ## Layout
 
 ```
 db.json                       mock data for json-server
+next.config.ts                rewrites /api/* to json-server
 src/
-  main.tsx                    entry: providers + browser router
-  routes.tsx                  route objects shared by the app and the tests
+  app/                        Next.js routes only: layout, providers (client), page.tsx files, error, not-found
+  views/                      page components the route files render (not `pages/`: that name is the Pages Router)
   features/books/             schema (zod), api (fetch), queries, forms, book components
   features/reading-session/   MobX demo store + component
   store/                      Redux Toolkit store and slices
-  pages/                      route components
   components/                 shared app components; ui/ is shadcn-generated
-  lib/utils.ts                shadcn `cn` helper
-  test/                       setup (jest-dom, cleanup), renderRoute (real routes + fresh providers), fixtures
+  lib/                        http (request, HttpError), query client retry policy, shadcn `cn`
+  test/                       setup, next/navigation + next/link mocks, renderWithProviders, fixtures
 ```
+
+- `'use client'` marks the client boundary: views, ViewToggle, providers, error. Route files and Header are
+  Server Components.
+- Stores and the QueryClient are created per mount in `providers.tsx`, never at module level (shared across
+  requests on the server).
 
 ## Version notes
 
-Newer majors than most tutorials: React Router 8 (no `react-router-dom`), MobX 7 / mobx-react-lite 5
-(no `Provider`/`inject`, no legacy decorators), Zod 4, `@hookform/resolvers` 7, Vite 8, TypeScript 7, Tailwind 4.
+Newer majors than most tutorials: Next.js 16.4 (`error.tsx` gets `retry`, not only `reset`), MobX 7 / mobx-react-lite 5
+(no `Provider`/`inject`, no legacy decorators), Zod 4, `@hookform/resolvers` 7, Vite 8 (only under Vitest now), TypeScript 7, Tailwind 4.
 shadcn imports `cn` from the `cn` package (shadcn's replacement for clsx + tailwind-merge).

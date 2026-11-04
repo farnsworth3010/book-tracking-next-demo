@@ -1,5 +1,7 @@
+'use client'
+
+import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,10 +10,10 @@ import { useBook, useDeleteBook, useUpdateBook } from '@/features/books/queries'
 import type { Book } from '@/features/books/schema'
 import { ReadingSession } from '@/features/reading-session/ReadingSession'
 import { HttpError } from '@/lib/http'
-import { NotFoundPage } from '@/pages/NotFoundPage'
+import { NotFoundPage } from '@/views/NotFoundPage'
 
-export default function BookPage() {
-  const { id = '' } = useParams()
+export function BookPage() {
+  const { id } = useParams<{ id: string }>()
   const book = useBook(id)
 
   if (book.isPending) return <Message>Loading book…</Message>
@@ -24,7 +26,7 @@ export default function BookPage() {
 }
 
 function BookDetails({ book }: { book: Book }) {
-  const navigate = useNavigate()
+  const router = useRouter()
   const updateBook = useUpdateBook()
   const deleteBook = useDeleteBook()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
@@ -61,7 +63,7 @@ function BookDetails({ book }: { book: Book }) {
                   <Button
                     variant="destructive"
                     disabled={deleteBook.isPending}
-                    onClick={() => deleteBook.mutate(book.id, { onSuccess: () => navigate('/', { replace: true }) })}
+                    onClick={() => deleteBook.mutate(book.id, { onSuccess: () => router.replace('/') })}
                   >
                     Confirm delete
                   </Button>

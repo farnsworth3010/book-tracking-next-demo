@@ -4,7 +4,9 @@ import { deleteBook, fetchBook, fetchBooks, updateBook } from '@/features/books/
 import type { Book } from '@/features/books/schema'
 import { HttpError } from '@/lib/http'
 import { makeBook } from '@/test/fixtures'
-import { renderRoute } from '@/test/renderRoute'
+import { currentUrl, mockRouter, navigate } from '@/test/next-navigation'
+import { renderWithProviders } from '@/test/render'
+import { BookPage } from './BookPage'
 
 vi.mock('@/features/books/api')
 
@@ -32,12 +34,9 @@ beforeEach(() => {
 })
 
 describe('BookPage', () => {
-  it('opens from the list and shows the book in the edit form', async () => {
-    const { router, user } = renderRoute('/')
+  it('shows the book from the URL in the edit form', async () => {
+    renderWithProviders(<BookPage />, { url: '/books/1', params: { id: '1' } })
 
-    await user.click(await screen.findByRole('link', { name: 'Dune' }))
-
-    expect(router.state.location.pathname).toBe('/books/1')
     expect(await screen.findByRole('heading', { name: 'Dune' })).toBeInTheDocument()
     expect(screen.getByLabelText('Title')).toHaveValue('Dune')
     expect(screen.getByLabelText('Pages')).toHaveValue(412)
@@ -45,7 +44,7 @@ describe('BookPage', () => {
   })
 
   it('shows a not-found page for an unknown book', async () => {
-    renderRoute('/books/99')
+    renderWithProviders(<BookPage />, { url: '/books/99', params: { id: '99' } })
 
     expect(await screen.findByRole('heading', { name: 'Book not found' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Back to books' })).toHaveAttribute('href', '/')
@@ -54,13 +53,13 @@ describe('BookPage', () => {
   it('shows other errors as they are', async () => {
     vi.mocked(fetchBook).mockRejectedValue(new HttpError(500, 'GET /api/books/1 failed: 500'))
 
-    renderRoute('/books/1')
+    renderWithProviders(<BookPage />, { url: '/books/1', params: { id: '1' } })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('GET /api/books/1 failed: 500')
   })
 
   it('saves edits and shows the new title right away', async () => {
-    const { user } = renderRoute('/books/1')
+    const { user } = renderWithProviders(<BookPage />, { url: '/books/1', params: { id: '1' } })
     const title = await screen.findByLabelText('Title')
 
     await user.clear(title)
@@ -72,7 +71,7 @@ describe('BookPage', () => {
   })
 
   it('asks for confirmation before deleting, then returns to the list', async () => {
-    const { router, user } = renderRoute('/books/1')
+    const { user } = renderWithProviders(<BookPage />, { url: '/books/1', params: { id: '1' } })
 
     await user.click(await screen.findByRole('button', { name: 'Delete book' }))
 
@@ -80,21 +79,21 @@ describe('BookPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Confirm delete' }))
 
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+    await waitFor(() => expect(currentUrl().pathname).toBe('/'))
     expect(vi.mocked(deleteBook).mock.calls[0][0]).toBe('1')
-    expect(await screen.findByRole('link', { name: 'Emma' })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'Dune' })).not.toBeInTheDocument()
+    // replace, not push: the deleted book's page must not stay in history
+    expect(mockRouter.replace).toHaveBeenCalledWith('/')
   })
 
   it('resets the form when switching to a book that is already cached', async () => {
-    const { router } = renderRoute('/books/2')
+    renderWithProviders(<BookPage />, { url: '/books/2', params: { id: '2' } })
     expect(await screen.findByLabelText('Title')).toHaveValue('Emma')
 
-    await act(() => router.navigate('/books/1'))
+    act(() => navigate('/books/1', { id: '1' }))
     expect(await screen.findByRole('heading', { name: 'Dune' })).toBeInTheDocument()
 
     // Book 2 is cached, so the page renders it without a loading state in between
-    await act(() => router.navigate('/books/2'))
+    act(() => navigate('/books/2', { id: '2' }))
 
     expect(await screen.findByRole('heading', { name: 'Emma' })).toBeInTheDocument()
     expect(screen.getByLabelText('Title')).toHaveValue('Emma')

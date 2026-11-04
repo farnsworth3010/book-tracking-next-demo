@@ -1,3 +1,5 @@
+'use client'
+
 import { LayoutGridIcon, ListIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAppDispatch, useAppSelector } from '@/store/store'

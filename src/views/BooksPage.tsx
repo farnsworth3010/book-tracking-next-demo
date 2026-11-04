@@ -1,4 +1,6 @@
-import { useSearchParams } from 'react-router'
+'use client'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Message } from '@/components/Message'
 import { BookCard } from '@/features/books/BookCard'
 import { QuickAddForm } from '@/features/books/QuickAddForm'
@@ -10,14 +12,19 @@ import { selectBooksView } from '@/store/uiSlice'
 
 export function BooksPage() {
   // The filter lives in the URL: it survives a reload and can be shared as a link
-  const [searchParams, setSearchParams] = useSearchParams()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const status = bookStatusSchema.safeParse(searchParams.get('status')).data
 
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Books</h1>
-        <StatusFilter value={status} onChange={(next) => setSearchParams(next ? { status: next } : {})} />
+        <StatusFilter
+          value={status}
+          onChange={(next) => router.push(next ? `${pathname}?status=${next}` : pathname, { scroll: false })}
+        />
       </div>
       <QuickAddForm />
       <BookList status={status} />
