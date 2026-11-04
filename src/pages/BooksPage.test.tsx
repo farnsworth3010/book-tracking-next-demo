@@ -1,8 +1,9 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fetchBooks } from '@/features/books/api'
+import { fetchBooks, updateBook } from '@/features/books/api'
+import type { Book } from '@/features/books/schema'
 import { selectBooksView } from '@/store/uiSlice'
-import { makeBook } from '@/test/fixtures'
+import { deferred, makeBook } from '@/test/fixtures'
 import { renderRoute } from '@/test/renderRoute'
 
 vi.mock('@/features/books/api')
@@ -17,17 +18,18 @@ beforeEach(() => {
 })
 
 describe('BooksPage', () => {
-  it('shows a loading state, then the books as links to their pages', async () => {
+  it('shows a loading state, then a card per book with a link to its page', async () => {
     renderRoute('/')
 
     expect(screen.getByText('Loading books…')).toBeInTheDocument()
 
-    const dune = await screen.findByRole('link', { name: /Dune/ })
+    const dune = await screen.findByRole('link', { name: 'Dune' })
+    const card = within(dune.closest('li')!)
 
     expect(dune).toHaveAttribute('href', '/books/1')
-    expect(dune).toHaveTextContent('Frank Herbert')
-    expect(dune).toHaveTextContent('Reading')
-    expect(screen.getByRole('link', { name: /Emma/ })).toHaveTextContent('474 pages')
+    expect(card.getByText('Frank Herbert')).toBeInTheDocument()
+    expect(card.getByRole('combobox', { name: 'Status of Dune' })).toHaveValue('reading')
+    expect(screen.getByText('474 pages')).toBeInTheDocument()
     expect(fetchBooks).toHaveBeenCalledWith(undefined)
   })
 
@@ -90,5 +92,49 @@ describe('BooksPage', () => {
     expect(selectBooksView(store.getState())).toBe('list')
     expect(list).toHaveAttribute('data-view', 'list')
     expect(screen.getByRole('button', { name: 'List view' })).toHaveAttribute('aria-pressed', 'true')
+  })
+})
+
+describe('status change on a card (optimistic update)', () => {
+  it('shows the new status before the server answers, then refetches', async () => {
+    const save = deferred<Book>()
+    vi.mocked(updateBook).mockReturnValue(save.promise)
+    const { user } = renderRoute('/')
+    const status = await screen.findByRole('combobox', { name: 'Status of Dune' })
+
+    await user.selectOptions(status, 'done')
+
+    // The request is still pending: the new value can only come from the optimistic cache write
+    await waitFor(() => expect(status).toHaveValue('done'))
+    expect(vi.mocked(updateBook).mock.calls[0][0]).toEqual({ ...books[0], status: 'done' })
+
+    vi.mocked(fetchBooks).mockResolvedValue([{ ...books[0], status: 'done' }, books[1]])
+    save.resolve({ ...books[0], status: 'done' })
+
+    await waitFor(() => expect(fetchBooks).toHaveBeenCalledTimes(2))
+    expect(status).toHaveValue('done')
+  })
+
+  it('rolls back and explains when the server rejects', async () => {
+    const save = deferred<Book>()
+    vi.mocked(updateBook).mockReturnValue(save.promise)
+    const { user } = renderRoute('/')
+    const status = await screen.findByRole('combobox', { name: 'Status of Dune' })
+
+    await user.selectOptions(status, 'done')
+    await waitFor(() => expect(status).toHaveValue('done'))
+
+    // Hold the follow-up refetch: while it is pending, only the rollback can restore the old value
+    const refetch = deferred<Book[]>()
+    vi.mocked(fetchBooks).mockReturnValue(refetch.promise)
+    save.reject(new Error('PUT /api/books/1 failed: 500'))
+
+    await waitFor(() => expect(status).toHaveValue('reading'))
+
+    // onSettled returns the invalidation, so the mutation reports its error once the refetch is done
+    refetch.resolve(books)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('PUT /api/books/1 failed: 500')
+    expect(status).toHaveValue('reading')
   })
 })

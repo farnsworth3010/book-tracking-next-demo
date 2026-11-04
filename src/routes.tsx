@@ -1,5 +1,6 @@
 import type { RouteObject } from 'react-router'
 import { Layout } from '@/components/Layout'
+import { BookPage } from '@/pages/BookPage'
 import { BooksPage } from '@/pages/BooksPage'
 import { NewBookPage } from '@/pages/NewBookPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -12,6 +13,7 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, Component: BooksPage },
       { path: 'books/new', Component: NewBookPage },
+      { path: 'books/:id', Component: BookPage },
       { path: '*', Component: NotFoundPage },
     ],
   },

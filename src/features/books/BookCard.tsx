@@ -1,25 +1,45 @@
 import { Link } from 'react-router'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { STATUS_LABELS, type Book } from './schema'
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
+import { useUpdateBook } from './queries'
+import { BOOK_STATUSES, bookStatusSchema, STATUS_LABELS, type Book } from './schema'
 
 export function BookCard({ book }: { book: Book }) {
+  const updateBook = useUpdateBook()
+
   return (
-    // `group` on the link lets the card react to hovering the whole link (group-hover:)
-    <Link
-      to={`/books/${book.id}`}
-      className="group block h-full rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-    >
-      <Card className="h-full transition-colors group-hover:border-ring">
-        <CardHeader>
-          <CardTitle>{book.title}</CardTitle>
-          <CardDescription>{book.author}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
-          <Badge variant="secondary">{STATUS_LABELS[book.status]}</Badge>
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle>
+          <Link to={`/books/${book.id}`} className="hover:underline">
+            {book.title}
+          </Link>
+        </CardTitle>
+        <CardDescription>{book.author}</CardDescription>
+      </CardHeader>
+      <CardContent className="mt-auto grid gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center justify-between gap-2">
+          {/* Controlled by the cached book: the optimistic cache write is what moves this value */}
+          <NativeSelect
+            size="sm"
+            aria-label={`Status of ${book.title}`}
+            value={book.status}
+            onChange={(event) => updateBook.mutate({ ...book, status: bookStatusSchema.parse(event.target.value) })}
+          >
+            {BOOK_STATUSES.map((status) => (
+              <NativeSelectOption key={status} value={status}>
+                {STATUS_LABELS[status]}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
           <span>{book.pages} pages</span>
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+        {updateBook.isError && (
+          <p role="alert" className="text-destructive">
+            {updateBook.error.message}
+          </p>
+        )}
+      </CardContent>
+    </Card>
   )
 }
