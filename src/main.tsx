@@ -5,11 +5,12 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
+import { shouldRetry } from '@/lib/queryClient'
 import { routes } from '@/routes'
 import { store } from '@/store/store'
 import './index.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: shouldRetry } } })
 const router = createBrowserRouter(routes)
 
 createRoot(document.getElementById('root')!).render(

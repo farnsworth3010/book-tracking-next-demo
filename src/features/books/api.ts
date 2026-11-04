@@ -1,15 +1,8 @@
 import { z } from 'zod'
+import { request } from '@/lib/http'
 import { bookSchema, type Book, type BookInput, type BookStatus } from './schema'
 
 const BASE = '/api/books'
-
-async function request(url: string, init?: RequestInit): Promise<unknown> {
-  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...init })
-
-  if (!res.ok) throw new Error(`${init?.method ?? 'GET'} ${url} failed: ${res.status}`)
-
-  return res.json()
-}
 
 // Responses are parsed with zod: the backend is a trust boundary, types alone don't check it at runtime
 export async function fetchBooks(status?: BookStatus): Promise<Book[]> {

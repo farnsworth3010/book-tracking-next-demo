@@ -138,3 +138,35 @@ describe('status change on a card (optimistic update)', () => {
     expect(status).toHaveValue('reading')
   })
 })
+
+describe('loading and errors', () => {
+  it('keeps the previous list on screen, marked busy, while another filter loads', async () => {
+    const { user } = renderRoute('/')
+    await screen.findByText('Dune')
+    const next = deferred<Book[]>()
+    vi.mocked(fetchBooks).mockReturnValue(next.promise)
+
+    await user.click(screen.getByRole('button', { name: 'Done' }))
+
+    expect(screen.queryByText('Loading books…')).not.toBeInTheDocument()
+    expect(screen.getByRole('list', { name: 'Books' })).toHaveAttribute('aria-busy', 'true')
+    expect(screen.getByText('Dune')).toBeInTheDocument()
+
+    next.resolve([books[1]])
+
+    await waitFor(() => expect(screen.queryByText('Dune')).not.toBeInTheDocument())
+    expect(screen.getByRole('list', { name: 'Books' })).toHaveAttribute('aria-busy', 'false')
+  })
+
+  it('shows an error page instead of a blank screen when rendering crashes', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    // Simulates a bug: data of the wrong shape reaching a component, so reading book.title throws in render
+    vi.mocked(fetchBooks).mockResolvedValue([null] as unknown as Book[])
+
+    renderRoute('/')
+
+    expect(await screen.findByRole('heading', { name: 'Something went wrong' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Back to books' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Book Tracker' })).toBeInTheDocument()
+  })
+})

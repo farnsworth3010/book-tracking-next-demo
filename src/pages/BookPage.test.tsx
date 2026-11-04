@@ -2,6 +2,7 @@ import { act, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { deleteBook, fetchBook, fetchBooks, updateBook } from '@/features/books/api'
 import type { Book } from '@/features/books/schema'
+import { HttpError } from '@/lib/http'
 import { makeBook } from '@/test/fixtures'
 import { renderRoute } from '@/test/renderRoute'
 
@@ -18,7 +19,7 @@ beforeEach(() => {
   vi.mocked(fetchBooks).mockImplementation(async () => db)
   vi.mocked(fetchBook).mockImplementation(async (id) => {
     const book = db.find((b) => b.id === id)
-    if (!book) throw new Error(`GET /api/books/${id} failed: 404`)
+    if (!book) throw new HttpError(404, `GET /api/books/${id} failed: 404`)
     return book
   })
   vi.mocked(updateBook).mockImplementation(async (book) => {
@@ -43,10 +44,19 @@ describe('BookPage', () => {
     expect(screen.getByRole('combobox', { name: 'Status' })).toHaveTextContent('Reading')
   })
 
-  it('shows the error for an unknown book', async () => {
+  it('shows a not-found page for an unknown book', async () => {
     renderRoute('/books/99')
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('GET /api/books/99 failed: 404')
+    expect(await screen.findByRole('heading', { name: 'Book not found' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Back to books' })).toHaveAttribute('href', '/')
+  })
+
+  it('shows other errors as they are', async () => {
+    vi.mocked(fetchBook).mockRejectedValue(new HttpError(500, 'GET /api/books/1 failed: 500'))
+
+    renderRoute('/books/1')
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('GET /api/books/1 failed: 500')
   })
 
   it('saves edits and shows the new title right away', async () => {

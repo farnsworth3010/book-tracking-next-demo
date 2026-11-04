@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { BookForm } from '@/features/books/BookForm'
 import { useCreateBook } from '@/features/books/queries'
 
-export function NewBookPage() {
+export default function NewBookPage() {
   const navigate = useNavigate()
   const createBook = useCreateBook()
 

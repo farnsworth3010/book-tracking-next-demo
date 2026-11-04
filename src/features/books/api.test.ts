@@ -31,6 +31,7 @@ describe('books api', () => {
     mockFetch({}, 500)
 
     await expect(fetchBooks()).rejects.toThrow('GET /api/books failed: 500')
+    await expect(fetchBooks()).rejects.toMatchObject({ name: 'HttpError', status: 500 })
   })
 
   it('posts a new book as JSON', async () => {

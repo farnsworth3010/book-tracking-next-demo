@@ -36,8 +36,9 @@ function BookList({ status }: { status?: BookStatus }) {
   return (
     <ul
       aria-label="Books"
+      aria-busy={books.isPlaceholderData}
       data-view={view}
-      className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3 data-[view=list]:grid-cols-1"
+      className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3 transition-opacity data-[view=list]:grid-cols-1 aria-busy:opacity-60"
     >
       {books.data.map((book) => (
         <li key={book.id}>

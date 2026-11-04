@@ -11,7 +11,7 @@ beforeEach(() => {
 })
 
 async function fillValidBook(user: ReturnType<typeof renderRoute>['user']) {
-  await user.type(screen.getByLabelText('Title'), '  Dune ')
+  await user.type(await screen.findByLabelText('Title'), '  Dune ')
   await user.type(screen.getByLabelText('Author'), 'Frank Herbert')
   await user.type(screen.getByLabelText('Pages'), '412')
   await user.type(screen.getByLabelText('Notes'), 'Classic')
@@ -24,13 +24,13 @@ describe('NewBookPage', () => {
     await user.click(screen.getByRole('link', { name: 'Add book' }))
 
     expect(router.state.location.pathname).toBe('/books/new')
-    expect(screen.getByRole('heading', { name: 'Add a book' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Add a book' })).toBeInTheDocument()
   })
 
   it('shows field errors and does not submit invalid input', async () => {
     const { user } = renderRoute('/books/new')
 
-    await user.click(screen.getByRole('button', { name: 'Save book' }))
+    await user.click(await screen.findByRole('button', { name: 'Save book' }))
 
     expect(await screen.findByText('Title is required')).toBeInTheDocument()
     expect(screen.getByText('Author is required')).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('NewBookPage', () => {
   it('creates the book with the default status and goes back to the list', async () => {
     const { router, user } = renderRoute('/books/new')
 
-    expect(screen.getByRole('combobox', { name: 'Status' })).toHaveTextContent('Want to read')
+    expect(await screen.findByRole('combobox', { name: 'Status' })).toHaveTextContent('Want to read')
 
     await fillValidBook(user)
     await user.click(screen.getByRole('button', { name: 'Save book' }))

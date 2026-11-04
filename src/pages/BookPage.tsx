@@ -7,12 +7,15 @@ import { BookForm } from '@/features/books/BookForm'
 import { useBook, useDeleteBook, useUpdateBook } from '@/features/books/queries'
 import type { Book } from '@/features/books/schema'
 import { ReadingSession } from '@/features/reading-session/ReadingSession'
+import { HttpError } from '@/lib/http'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 
-export function BookPage() {
+export default function BookPage() {
   const { id = '' } = useParams()
   const book = useBook(id)
 
   if (book.isPending) return <Message>Loading book…</Message>
+  if (book.error instanceof HttpError && book.error.status === 404) return <NotFoundPage title="Book not found" />
   if (book.isError) return <Message role="alert" className="text-destructive">{book.error.message}</Message>
 
   // key: a different book is a different component instance, so the form, the delete

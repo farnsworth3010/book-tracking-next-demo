@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createBook, deleteBook, fetchBook, fetchBooks, updateBook } from './api'
 import type { Book, BookStatus } from './schema'
 
@@ -11,7 +11,12 @@ export const bookKeys = {
 }
 
 export function useBooks(status?: BookStatus) {
-  return useQuery({ queryKey: bookKeys.list(status), queryFn: () => fetchBooks(status) })
+  return useQuery({
+    queryKey: bookKeys.list(status),
+    queryFn: () => fetchBooks(status),
+    // A new filter is a new key; keep showing the previous list instead of a loading state
+    placeholderData: keepPreviousData,
+  })
 }
 
 export function useBook(id: string) {

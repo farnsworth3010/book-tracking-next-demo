@@ -1,4 +1,6 @@
+import { Suspense } from 'react'
 import { Link, Outlet } from 'react-router'
+import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { ViewToggle } from '@/components/ViewToggle'
 
@@ -17,7 +19,10 @@ export function Layout() {
         </div>
       </header>
       <main>
-        <Outlet />
+        {/* Fallback while a lazy page's code is downloading */}
+        <Suspense fallback={<Message>Loading page…</Message>}>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   )
