@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { request } from '@/lib/http'
-import { bookSchema, type Book, type BookInput, type BookStatus } from './schema'
+import { bookSchema, type Book, type BookInput, type BookStatus } from '@/schemas/book'
+import { request } from './http'
 
 const BASE = '/api/books'
 

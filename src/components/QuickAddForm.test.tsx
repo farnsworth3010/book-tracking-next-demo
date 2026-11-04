@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createBook, fetchBooks } from '@/features/books/api'
+import { createBook, fetchBooks } from '@/services/booksApi'
 import { makeBook } from '@/test/fixtures'
 import { renderWithProviders } from '@/test/render'
 import { BooksPage } from '@/views/BooksPage'
 
-vi.mock('@/features/books/api')
+vi.mock('@/services/booksApi')
 
 beforeEach(() => {
   vi.mocked(fetchBooks).mockResolvedValue([])

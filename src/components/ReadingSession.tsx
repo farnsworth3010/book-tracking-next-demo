@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ReadingSessionStore } from './readingSessionStore'
+import { ReadingSessionStore } from '@/stores/readingSessionStore'
 
 // observer re-renders this component when any observable it read during render changes
 export const ReadingSession = observer(function ReadingSession() {

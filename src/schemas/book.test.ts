@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bookInputSchema, bookStatusSchema } from './schema'
+import { bookInputSchema, bookStatusSchema } from './book'
 
 const valid = { title: 'Dune', author: 'Frank Herbert', status: 'want', pages: 412, notes: '' }
 

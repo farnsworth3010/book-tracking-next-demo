@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useCreateBook } from './queries'
-import { bookInputSchema } from './schema'
+import { useCreateBook } from '@/hooks/books'
+import { bookInputSchema } from '@/schemas/book'
 
 // Inputs hold strings; pages is coerced to a number and then checked by the shared book rules
 const quickAddSchema = bookInputSchema.pick({ title: true, author: true }).extend({

@@ -40,10 +40,10 @@ npm run build     # next build (type checks with the local tsc CLI, TypeScript 7
 |---|---|---|
 | Framework | Next.js 16 App Router (Turbopack); docs for this exact version are in `node_modules/next/dist/docs/` | — |
 | Routing | File routes in `src/app/`; `next/link`, `next/navigation` (`useRouter`, `useSearchParams`, `useParams`) | — |
-| Server state | TanStack Query (`src/features/books/queries.ts`) | — |
-| Client state | Redux Toolkit (`src/store/`) | MobX (`src/features/reading-session/`) |
+| Server state | TanStack Query (`src/hooks/books.ts`) | — |
+| Client state | Redux Toolkit (`src/stores/store.ts`, `uiSlice.ts`) | MobX (`src/stores/readingSessionStore.ts`) |
 | Forms | React Hook Form + Zod (`BookForm`) | TanStack Form (`QuickAddForm`) |
-| Validation | Zod (`src/features/books/schema.ts`), also for API responses and URL params | — |
+| Validation | Zod (`src/schemas/book.ts`), also for API responses and URL params | — |
 | UI kit | shadcn/ui in `src/components/ui/` (generated, Tailwind inside; add via `npx shadcn add <name>`) | — |
 | Own styles | Tailwind utilities in `className`, `cn` for conditional classes and overrides (no styled-components) | — |
 | Tests | Vitest + Testing Library (jsdom), tests next to the code; `next/navigation` and `next/link` are mocked in `src/test/setup.ts`, render with `renderWithProviders` | — |
@@ -51,20 +51,28 @@ npm run build     # next build (type checks with the local tsc CLI, TypeScript 7
 
 ## Layout
 
+Layered by technical type (branch `arch/layered`, details and rules in `ARCHITECTURE.md`): the top-level folder is the
+file's role, not its feature. Imports go only downward:
+`app → views → components → hooks → services / stores → schemas → lib`, enforced by `no-restricted-imports`
+overrides in `.oxlintrc.json` (tests exempt).
+
 ```
 db.json                       mock data for json-server
 next.config.ts                rewrites /api/* to json-server
 src/
   app/                        Next.js routes only: layout, providers (client), page.tsx files, error, not-found
   views/                      page components the route files render (not `pages/`: that name is the Pages Router)
-  features/books/             schema (zod), api (fetch), queries, forms, book components
-  features/reading-session/   MobX demo store + component
-  store/                      Redux Toolkit store and slices
-  components/                 shared app components; ui/ is shadcn-generated
-  lib/                        http (request, HttpError), query client retry policy, shadcn `cn`
+  components/                 all app components (BookCard, BookForm, QuickAddForm, StatusFilter, ReadingSession,
+                              Header, Message, ViewToggle); ui/ is shadcn-generated
+  hooks/                      books.ts (TanStack Query keys + hooks), redux.ts (typed Redux hooks)
+  services/                   booksApi (fetch + zod parsing), http (request, HttpError), queryClient retry policy
+  stores/                     Redux Toolkit store + uiSlice, MobX ReadingSessionStore
+  schemas/                    zod schemas and inferred domain types
+  lib/                        shadcn `cn`
   test/                       setup, next/navigation + next/link mocks, renderWithProviders, fixtures
 ```
 
+- UI (views, components) never imports `services/booksApi`; server data goes through `hooks/`.
 - `'use client'` marks the client boundary: views, ViewToggle, providers, error. Route files and Header are
   Server Components.
 - Stores and the QueryClient are created per mount in `providers.tsx`, never at module level (shared across

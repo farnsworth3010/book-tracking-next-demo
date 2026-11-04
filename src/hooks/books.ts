@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createBook, deleteBook, fetchBook, fetchBooks, updateBook } from './api'
-import type { Book, BookStatus } from './schema'
+import { createBook, deleteBook, fetchBook, fetchBooks, updateBook } from '@/services/booksApi'
+import type { Book, BookStatus } from '@/schemas/book'
 
 // One place for cache keys: ['books', ...] lets a mutation invalidate every books query by prefix
 export const bookKeys = {

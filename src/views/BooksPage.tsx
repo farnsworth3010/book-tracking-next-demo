@@ -2,13 +2,13 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Message } from '@/components/Message'
-import { BookCard } from '@/features/books/BookCard'
-import { QuickAddForm } from '@/features/books/QuickAddForm'
-import { useBooks } from '@/features/books/queries'
-import { bookStatusSchema, type BookStatus } from '@/features/books/schema'
-import { StatusFilter } from '@/features/books/StatusFilter'
-import { useAppSelector } from '@/store/store'
-import { selectBooksView } from '@/store/uiSlice'
+import { BookCard } from '@/components/BookCard'
+import { QuickAddForm } from '@/components/QuickAddForm'
+import { useBooks } from '@/hooks/books'
+import { bookStatusSchema, type BookStatus } from '@/schemas/book'
+import { StatusFilter } from '@/components/StatusFilter'
+import { useAppSelector } from '@/hooks/redux'
+import { selectBooksView } from '@/stores/uiSlice'
 
 export function BooksPage() {
   // The filter lives in the URL: it survives a reload and can be shared as a link

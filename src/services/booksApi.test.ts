@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { createBook, fetchBooks } from './api'
+import { createBook, fetchBooks } from './booksApi'
 
 const book = { id: '1', title: 'Dune', author: 'Frank Herbert', status: 'want', pages: 412, notes: '' }
 

@@ -1,15 +1,15 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fetchBooks, updateBook } from '@/features/books/api'
-import type { Book } from '@/features/books/schema'
-import { selectBooksView } from '@/store/uiSlice'
+import { fetchBooks, updateBook } from '@/services/booksApi'
+import type { Book } from '@/schemas/book'
+import { selectBooksView } from '@/stores/uiSlice'
 import { deferred, makeBook } from '@/test/fixtures'
 import { ViewToggle } from '@/components/ViewToggle'
 import { currentUrl } from '@/test/next-navigation'
 import { renderWithProviders } from '@/test/render'
 import { BooksPage } from './BooksPage'
 
-vi.mock('@/features/books/api')
+vi.mock('@/services/booksApi')
 
 const books = [
   makeBook({ id: '1', title: 'Dune', author: 'Frank Herbert', status: 'reading' }),

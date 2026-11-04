@@ -20,5 +20,251 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/lib/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/views/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/views (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/components/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/components (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/hooks/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/hooks (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/stores/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/stores (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/services/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/services (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/schemas/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/schemas (see ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/schemas/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/views/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/views (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/components/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/components (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/hooks/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/hooks (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/stores/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/stores (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/services/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/services (see ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/services/**",
+        "src/stores/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/views/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/views (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/components/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/components (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/hooks/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/hooks (see ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/hooks/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/views/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/views (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/components/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/components (see ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/components/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/views/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/views (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/services/booksApi"
+                ],
+                "message": "Layered: UI reads and writes server data through @/hooks, not the API module."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/views/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/app/**"
+                ],
+                "message": "Layered: a lower layer must not import from @/app (see ARCHITECTURE.md)."
+              },
+              {
+                "group": [
+                  "@/services/booksApi"
+                ],
+                "message": "Layered: UI reads and writes server data through @/hooks, not the API module."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
 }

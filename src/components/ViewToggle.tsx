@@ -2,8 +2,8 @@
 
 import { LayoutGridIcon, ListIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAppDispatch, useAppSelector } from '@/store/store'
-import { selectBooksView, setBooksView } from '@/store/uiSlice'
+import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { selectBooksView, setBooksView } from '@/stores/uiSlice'
 
 export function ViewToggle() {
   const view = useAppSelector(selectBooksView)

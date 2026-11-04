@@ -5,7 +5,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { BOOK_STATUSES, bookInputSchema, STATUS_LABELS, type BookInput } from './schema'
+import { BOOK_STATUSES, bookInputSchema, STATUS_LABELS, type BookInput } from '@/schemas/book'
 
 type BookFormProps = {
   defaultValues?: Partial<BookInput>

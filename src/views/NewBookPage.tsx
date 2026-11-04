@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { Message } from '@/components/Message'
 import { Card, CardContent } from '@/components/ui/card'
-import { BookForm } from '@/features/books/BookForm'
-import { useCreateBook } from '@/features/books/queries'
+import { BookForm } from '@/components/BookForm'
+import { useCreateBook } from '@/hooks/books'
 
 export function NewBookPage() {
   const router = useRouter()
