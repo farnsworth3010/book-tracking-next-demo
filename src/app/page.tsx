@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
-import { Message } from '@/components/Message'
-import { BooksPage } from '@/views/BooksPage'
+import { Message } from '@/components/message'
+import { BooksPage } from './_components/books-page'
 
 export default function HomePage() {
   return (

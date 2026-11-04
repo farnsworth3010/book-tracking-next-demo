@@ -5,8 +5,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { enableStaticRendering } from 'mobx-react-lite'
 import { useState } from 'react'
 import { Provider } from 'react-redux'
-import { shouldRetry } from '@/lib/queryClient'
-import { makeStore } from '@/store/store'
+import { shouldRetry } from '@/lib/react-query'
+import { makeStore } from '@/stores/store'
 
 // On the server, observer components render once and must not subscribe (nothing would ever unsubscribe)
 enableStaticRendering(typeof window === 'undefined')

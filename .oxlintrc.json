@@ -4,7 +4,8 @@
     "react",
     "typescript",
     "oxc",
-    "nextjs"
+    "nextjs",
+    "unicorn"
   ],
   "rules": {
     "react/rules-of-hooks": "error",
@@ -19,6 +20,48 @@
           "generateViewport"
         ]
       }
-    ]
-  }
+    ],
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }]
+  },
+  "overrides": [
+    {
+      "files": ["src/app/**"],
+      "rules": {
+        "no-restricted-imports": ["error", { "patterns": [
+          { "regex": "^@/features/[^/]+/?$", "message": "Features have no barrel index: import the file you need." }
+        ] }]
+      }
+    },
+    {
+      "files": ["src/features/books/**"],
+      "rules": {
+        "oxc/no-barrel-file": ["error", { "threshold": 0 }],
+        "no-restricted-imports": ["error", { "patterns": [
+          { "regex": "^@/app(/|$)", "message": "Features must not import from the app layer." },
+          { "group": ["@/features/**", "!@/features/books/**"], "message": "Features must not import from other features; compose them in src/app." },
+          { "regex": "^\\.\\./", "message": "Use @/ imports outside the current folder." }
+        ] }]
+      }
+    },
+    {
+      "files": ["src/features/reading-session/**"],
+      "rules": {
+        "oxc/no-barrel-file": ["error", { "threshold": 0 }],
+        "no-restricted-imports": ["error", { "patterns": [
+          { "regex": "^@/app(/|$)", "message": "Features must not import from the app layer." },
+          { "group": ["@/features/**", "!@/features/reading-session/**"], "message": "Features must not import from other features; compose them in src/app." },
+          { "regex": "^\\.\\./", "message": "Use @/ imports outside the current folder." }
+        ] }]
+      }
+    },
+    {
+      "files": ["src/components/**", "src/config/**", "src/hooks/**", "src/lib/**", "src/stores/**", "src/types/**", "src/utils/**"],
+      "rules": {
+        "no-restricted-imports": ["error", { "patterns": [
+          { "regex": "^@/(app|features)(/|$)", "message": "Shared code must not import from features or the app layer." },
+          { "regex": "^\\.\\./", "message": "Use @/ imports outside the current folder." }
+        ] }]
+      }
+    }
+  ]
 }
