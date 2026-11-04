@@ -2,6 +2,8 @@
 
 A small book tracker built to learn the modern React stack. It started as a Vite SPA (tag `vite-spa`) and now runs on the Next.js App Router.
 
+![Book Tracker: the book list with status filters, quick add form and book cards](docs/screenshot.png)
+
 ## Run
 
 ```bash
