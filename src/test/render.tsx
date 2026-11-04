@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
 import { Provider } from 'react-redux'
-import { makeStore } from '@/store/store'
+import { makeStore } from '@/state/store'
 import { navigate } from './next-navigation'
 
 type Options = { url?: string; params?: Record<string, string> }

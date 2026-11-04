@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/atoms/button'
 
 export function NotFoundPage({ title = 'Page not found' }: { title?: string }) {
   return (

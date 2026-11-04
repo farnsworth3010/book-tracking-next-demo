@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import { Button } from '@/components/ui/button'
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { BOOK_STATUSES, bookInputSchema, STATUS_LABELS, type BookInput } from './schema'
+import { Button } from '@/components/atoms/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/atoms/field'
+import { Input } from '@/components/atoms/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/select'
+import { Textarea } from '@/components/atoms/textarea'
+import { BOOK_STATUSES, bookInputSchema, STATUS_LABELS, type BookInput } from '@/services/books/schema'
 
 type BookFormProps = {
   defaultValues?: Partial<BookInput>

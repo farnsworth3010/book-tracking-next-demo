@@ -1,7 +1,7 @@
 'use client' // error boundaries catch render errors with React state, so they must be Client Components
 
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/atoms/button'
 
 type ErrorPageProps = {
   error: unknown

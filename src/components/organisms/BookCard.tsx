@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
-import { useUpdateBook } from './queries'
-import { BOOK_STATUSES, bookStatusSchema, STATUS_LABELS, type Book } from './schema'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/card'
+import { NativeSelect, NativeSelectOption } from '@/components/atoms/native-select'
+import { useUpdateBook } from '@/services/books/queries'
+import { BOOK_STATUSES, bookStatusSchema, STATUS_LABELS, type Book } from '@/services/books/schema'
 
 export function BookCard({ book }: { book: Book }) {
   const updateBook = useUpdateBook()

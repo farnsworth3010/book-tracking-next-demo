@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Header } from '@/components/Header'
+import { Header } from '@/components/organisms/Header'
 import { Providers } from './providers'
 import './globals.css'
 

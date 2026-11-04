@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { ViewToggle } from '@/components/ViewToggle'
+import { Button } from '@/components/atoms/button'
+import { ViewToggle } from '@/components/molecules/ViewToggle'
 
 // Server Component: static markup; only ViewToggle (store + clicks) ships as client code
 export function Header() {

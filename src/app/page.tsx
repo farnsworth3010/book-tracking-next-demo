@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Message } from '@/components/Message'
+import { Message } from '@/components/molecules/Message'
 import { BooksPage } from '@/views/BooksPage'
 
 export default function HomePage() {

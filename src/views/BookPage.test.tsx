@@ -1,14 +1,14 @@
 import { act, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { deleteBook, fetchBook, fetchBooks, updateBook } from '@/features/books/api'
-import type { Book } from '@/features/books/schema'
+import { deleteBook, fetchBook, fetchBooks, updateBook } from '@/services/books/api'
+import type { Book } from '@/services/books/schema'
 import { HttpError } from '@/lib/http'
 import { makeBook } from '@/test/fixtures'
 import { currentUrl, mockRouter, navigate } from '@/test/next-navigation'
 import { renderWithProviders } from '@/test/render'
 import { BookPage } from './BookPage'
 
-vi.mock('@/features/books/api')
+vi.mock('@/services/books/api')
 
 const dune = makeBook({ id: '1', title: 'Dune', status: 'reading' })
 const emma = makeBook({ id: '2', title: 'Emma', author: 'Jane Austen', status: 'done', pages: 474 })

@@ -1,9 +1,9 @@
 'use client'
 
 import { LayoutGridIcon, ListIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useAppDispatch, useAppSelector } from '@/store/store'
-import { selectBooksView, setBooksView } from '@/store/uiSlice'
+import { Button } from '@/components/atoms/button'
+import { useAppDispatch, useAppSelector } from '@/state/store'
+import { selectBooksView, setBooksView } from '@/state/uiSlice'
 
 export function ViewToggle() {
   const view = useAppSelector(selectBooksView)

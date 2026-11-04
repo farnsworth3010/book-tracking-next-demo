@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { BOOK_STATUSES, STATUS_LABELS, type BookStatus } from './schema'
+import { Button } from '@/components/atoms/button'
+import { BOOK_STATUSES, STATUS_LABELS, type BookStatus } from '@/services/books/schema'
 
 type StatusFilterProps = {
   value?: BookStatus

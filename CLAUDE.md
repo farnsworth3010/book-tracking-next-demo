@@ -40,31 +40,39 @@ npm run build     # next build (type checks with the local tsc CLI, TypeScript 7
 |---|---|---|
 | Framework | Next.js 16 App Router (Turbopack); docs for this exact version are in `node_modules/next/dist/docs/` | — |
 | Routing | File routes in `src/app/`; `next/link`, `next/navigation` (`useRouter`, `useSearchParams`, `useParams`) | — |
-| Server state | TanStack Query (`src/features/books/queries.ts`) | — |
-| Client state | Redux Toolkit (`src/store/`) | MobX (`src/features/reading-session/`) |
+| Server state | TanStack Query (`src/services/books/queries.ts`) | — |
+| Client state | Redux Toolkit (`src/state/`) | MobX (`src/state/readingSessionStore.ts`) |
 | Forms | React Hook Form + Zod (`BookForm`) | TanStack Form (`QuickAddForm`) |
-| Validation | Zod (`src/features/books/schema.ts`), also for API responses and URL params | — |
-| UI kit | shadcn/ui in `src/components/ui/` (generated, Tailwind inside; add via `npx shadcn add <name>`) | — |
+| Validation | Zod (`src/services/books/schema.ts`), also for API responses and URL params | — |
+| UI kit | shadcn/ui in `src/components/atoms/` (generated, Tailwind inside; add via `npx shadcn add <name>`) | — |
 | Own styles | Tailwind utilities in `className`, `cn` for conditional classes and overrides (no styled-components) | — |
 | Tests | Vitest + Testing Library (jsdom), tests next to the code; `next/navigation` and `next/link` are mocked in `src/test/setup.ts`, render with `renderWithProviders` | — |
 | Mock backend | json-server v1 (`db.json`, string ids, `?field=value` filters) | — |
 
 ## Layout
 
+Atomic Design (Brad Frost): UI is split by visual complexity; see ARCHITECTURE.md for the rules and trade-offs.
+
 ```
-db.json                       mock data for json-server
-next.config.ts                rewrites /api/* to json-server
+db.json                         mock data for json-server
+next.config.ts                  rewrites /api/* to json-server
 src/
-  app/                        Next.js routes only: layout, providers (client), page.tsx files, error, not-found
-  views/                      page components the route files render (not `pages/`: that name is the Pages Router)
-  features/books/             schema (zod), api (fetch), queries, forms, book components
-  features/reading-session/   MobX demo store + component
-  store/                      Redux Toolkit store and slices
-  components/                 shared app components; ui/ is shadcn-generated
-  lib/                        http (request, HttpError), query client retry policy, shadcn `cn`
-  test/                       setup, next/navigation + next/link mocks, renderWithProviders, fixtures
+  app/                          Next.js routes only: layout, providers (client), page.tsx files, error, not-found
+  views/                        the Atomic "pages" level: templates filled with real data (not `pages/`: Pages Router)
+  components/
+    atoms/                      shadcn-generated primitives (components.json `ui` alias points here)
+    molecules/                  small single-purpose groups: Message, StatusFilter, ViewToggle
+    organisms/                  self-contained blocks: Header, BookCard, BookList, BookForm, QuickAddForm,
+                                ReadingSession, DeleteBookCard
+    templates/                  slot-based page layouts with no data: ListPage, DetailPage, FormPage
+  services/books/               non-UI: book model (zod schema, labels), api (fetch), TanStack Query hooks
+  state/                        non-UI: Redux Toolkit store + ui slice, MobX reading-session store
+  lib/                          app-agnostic helpers: http (request, HttpError), query retry policy, shadcn `cn`
+  test/                         setup, next/navigation + next/link mocks, renderWithProviders, fixtures
 ```
 
+- Import direction: a level imports its own level and the ones below (atoms < molecules < organisms < templates
+  < views < app), never above. Enforced by `no-restricted-imports` overrides in `.oxlintrc.json`; tests are exempt.
 - `'use client'` marks the client boundary: views, ViewToggle, providers, error. Route files and Header are
   Server Components.
 - Stores and the QueryClient are created per mount in `providers.tsx`, never at module level (shared across

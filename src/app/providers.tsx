@@ -6,7 +6,7 @@ import { enableStaticRendering } from 'mobx-react-lite'
 import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { shouldRetry } from '@/lib/queryClient'
-import { makeStore } from '@/store/store'
+import { makeStore } from '@/state/store'
 
 // On the server, observer components render once and must not subscribe (nothing would ever unsubscribe)
 enableStaticRendering(typeof window === 'undefined')

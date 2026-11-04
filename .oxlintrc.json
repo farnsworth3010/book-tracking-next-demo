@@ -20,5 +20,90 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/components/atoms/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(molecules|organisms|templates|views|app|services|state)(/|$)",
+            "message": "Atoms are the lowest level: they may import only other atoms and @/lib/utils."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/components/molecules/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(organisms|templates|views|app)(/|$)|^@/services/.*/(api|queries)$",
+            "message": "Molecules may import atoms, other molecules, models (@/services/*/schema), @/state and @/lib; no data fetching."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/components/organisms/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(templates|views|app)(/|$)",
+            "message": "Organisms may import organisms, molecules, atoms and non-UI code, never templates, views or routes."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/components/templates/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(views|app|services|state)(/|$)",
+            "message": "Templates are layouts without real data: they may import components, never data (@/services, @/state), views or routes."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/views/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "^@/app(/|$)",
+            "message": "Views are rendered by routes; they must not import route files."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/services/**", "src/state/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(components|views)(/|$)|^@/app(/|$)",
+            "message": "Non-UI code must not import UI."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["src/lib/**"],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "patterns": [{
+            "regex": "(^|/)(components|views|services|state)(/|$)|^@/app(/|$)",
+            "message": "lib holds app-agnostic helpers: it imports nothing from the app."
+          }]
+        }]
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
 }

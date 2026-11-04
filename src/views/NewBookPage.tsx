@@ -1,18 +1,18 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Message } from '@/components/Message'
-import { Card, CardContent } from '@/components/ui/card'
-import { BookForm } from '@/features/books/BookForm'
-import { useCreateBook } from '@/features/books/queries'
+import { Card, CardContent } from '@/components/atoms/card'
+import { Message } from '@/components/molecules/Message'
+import { BookForm } from '@/components/organisms/BookForm'
+import { FormPageTemplate } from '@/components/templates/FormPageTemplate'
+import { useCreateBook } from '@/services/books/queries'
 
 export function NewBookPage() {
   const router = useRouter()
   const createBook = useCreateBook()
 
   return (
-    <div className="mx-auto grid max-w-xl gap-6">
-      <h1 className="text-2xl font-bold">Add a book</h1>
+    <FormPageTemplate title="Add a book">
       <Card>
         <CardContent>
           <BookForm
@@ -27,6 +27,6 @@ export function NewBookPage() {
           {createBook.error.message}
         </Message>
       )}
-    </div>
+    </FormPageTemplate>
   )
 }

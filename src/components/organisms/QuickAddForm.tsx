@@ -1,11 +1,11 @@
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { useCreateBook } from './queries'
-import { bookInputSchema } from './schema'
+import { Button } from '@/components/atoms/button'
+import { Card, CardContent } from '@/components/atoms/card'
+import { Field, FieldError, FieldLabel } from '@/components/atoms/field'
+import { Input } from '@/components/atoms/input'
+import { useCreateBook } from '@/services/books/queries'
+import { bookInputSchema } from '@/services/books/schema'
 
 // Inputs hold strings; pages is coerced to a number and then checked by the shared book rules
 const quickAddSchema = bookInputSchema.pick({ title: true, author: true }).extend({
