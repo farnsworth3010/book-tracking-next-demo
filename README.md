@@ -23,4 +23,4 @@ npm run dev    # Vite dev server; /api/* is proxied to json-server
 ## Stack
 
 Vite, React 19, TypeScript, React Router, TanStack Query, React Hook Form + Zod, TanStack Form (one demo form),
-Redux Toolkit and MobX (one demo each), styled-components + shadcn/ui (Tailwind), Vitest + Testing Library.
+Redux Toolkit and MobX (one demo each), Tailwind CSS + shadcn/ui, Vitest + Testing Library.

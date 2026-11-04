@@ -14,6 +14,14 @@ knows Angular well and React only from the class-component era. The next stage i
   (see the table below).
 - Git config changes only with `--local`.
 
+## Roadmap
+
+1. Vite SPA on the stack below, step by step (current stage).
+2. Migration to Next.js.
+3. At the very end, architecture comparison: rebuild the same app in separate git branches, one per architecture
+   (Feature-Sliced Design, Atomic Design, and others such as feature folders / layered), so the user can compare
+   them side by side. Keep `main` on the current simple feature-folder layout until then.
+
 ## Commands
 
 ```bash
@@ -35,7 +43,7 @@ npm run build     # tsc -b + vite build
 | Forms | React Hook Form + Zod (`BookForm`) | TanStack Form (`QuickAddForm`) |
 | Validation | Zod (`src/features/books/schema.ts`), also for API responses and URL params | — |
 | UI kit | shadcn/ui in `src/components/ui/` (generated, Tailwind inside; add via `npx shadcn add <name>`) | — |
-| Own styles | styled-components (layout and app components); no Tailwind utilities in our own code | — |
+| Own styles | Tailwind utilities in `className`, `cn` for conditional classes and overrides (no styled-components) | — |
 | Tests | Vitest + Testing Library (jsdom), tests next to the code as `*.test.ts(x)` | — |
 | Mock backend | json-server v1 (`db.json`, string ids, `?field=value` filters) | — |
 
@@ -44,14 +52,15 @@ npm run build     # tsc -b + vite build
 ```
 db.json                       mock data for json-server
 src/
-  main.tsx                    entry: providers + router
+  main.tsx                    entry: providers + browser router
+  routes.tsx                  route objects shared by the app and the tests
   features/books/             schema (zod), api (fetch), queries, forms, book components
   features/reading-session/   MobX demo store + component
   store/                      Redux Toolkit store and slices
   pages/                      route components
   components/                 shared app components; ui/ is shadcn-generated
   lib/utils.ts                shadcn `cn` helper
-  test/setup.ts               jest-dom matchers, cleanup
+  test/                       setup (jest-dom, cleanup), renderRoute (real routes + fresh providers), fixtures
 ```
 
 ## Version notes
