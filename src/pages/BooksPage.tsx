@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router'
 import { Message } from '@/components/Message'
 import { BookCard } from '@/features/books/BookCard'
+import { QuickAddForm } from '@/features/books/QuickAddForm'
 import { useBooks } from '@/features/books/queries'
 import { bookStatusSchema, type BookStatus } from '@/features/books/schema'
 import { StatusFilter } from '@/features/books/StatusFilter'
@@ -18,6 +19,7 @@ export function BooksPage() {
         <h1 className="text-2xl font-bold">Books</h1>
         <StatusFilter value={status} onChange={(next) => setSearchParams(next ? { status: next } : {})} />
       </div>
+      <QuickAddForm />
       <BookList status={status} />
     </>
   )

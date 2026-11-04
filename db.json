@@ -1,10 +1,53 @@
 {
-  "$schema": "./node_modules/json-server/schema.json",
   "books": [
-    { "id": "1", "title": "The Pragmatic Programmer", "author": "Andrew Hunt, David Thomas", "status": "done", "pages": 352, "notes": "Re-read the chapter on tracer bullets." },
-    { "id": "2", "title": "Designing Data-Intensive Applications", "author": "Martin Kleppmann", "status": "reading", "pages": 616, "notes": "" },
-    { "id": "3", "title": "Refactoring", "author": "Martin Fowler", "status": "want", "pages": 448, "notes": "" },
-    { "id": "4", "title": "Clean Architecture", "author": "Robert C. Martin", "status": "done", "pages": 432, "notes": "" },
-    { "id": "5", "title": "Learning Patterns", "author": "Lydia Hallie, Addy Osmani", "status": "want", "pages": 300, "notes": "React patterns section first." }
-  ]
+    {
+      "id": "1",
+      "title": "The Pragmatic Programmer",
+      "author": "Andrew Hunt, David Thomas",
+      "status": "done",
+      "pages": 352,
+      "notes": "Re-read the chapter on tracer bullets."
+    },
+    {
+      "id": "2",
+      "title": "Designing Data-Intensive Applications",
+      "author": "Martin Kleppmann",
+      "status": "reading",
+      "pages": 616,
+      "notes": ""
+    },
+    {
+      "id": "3",
+      "title": "Refactoring",
+      "author": "Martin Fowler",
+      "status": "want",
+      "pages": 448,
+      "notes": ""
+    },
+    {
+      "id": "4",
+      "title": "Clean Architecture",
+      "author": "Robert C. Martin",
+      "status": "done",
+      "pages": 432,
+      "notes": ""
+    },
+    {
+      "id": "5",
+      "title": "Learning Patterns",
+      "author": "Lydia Hallie, Addy Osmani",
+      "status": "want",
+      "pages": 300,
+      "notes": "React patterns section first."
+    },
+    {
+      "title": "jj",
+      "author": "j",
+      "status": "want",
+      "pages": 23,
+      "notes": "123",
+      "id": "jk60oSQIpbk"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

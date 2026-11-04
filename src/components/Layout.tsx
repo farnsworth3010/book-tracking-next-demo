@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'react-router'
+import { Button } from '@/components/ui/button'
 import { ViewToggle } from '@/components/ViewToggle'
 
 export function Layout() {
@@ -8,7 +9,12 @@ export function Layout() {
         <Link to="/" className="text-xl font-bold">
           Book Tracker
         </Link>
-        <ViewToggle />
+        <div className="flex items-center gap-3">
+          <ViewToggle />
+          <Button asChild size="sm">
+            <Link to="/books/new">Add book</Link>
+          </Button>
+        </div>
       </header>
       <main>
         <Outlet />
