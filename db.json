@@ -47,6 +47,14 @@
       "status": "want",
       "notes": "",
       "id": "aWHAZwDIGT4"
+    },
+    {
+      "title": "пу",
+      "author": "уу",
+      "pages": 123,
+      "status": "want",
+      "notes": "",
+      "id": "i47lKjwun9U"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

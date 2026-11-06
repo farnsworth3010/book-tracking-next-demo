@@ -20,5 +20,173 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/shared/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages|widgets|features|entities)(/|$)",
+                "message": "Feature-Sliced Design: a layer may import only from layers below it, and slices of one layer must not import each other."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/entities/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages|widgets|features|entities)(/|$)",
+                "message": "Feature-Sliced Design: a layer may import only from layers below it, and slices of one layer must not import each other."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/features/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages|widgets|features)(/|$)",
+                "message": "Feature-Sliced Design: a layer may import only from layers below it, and slices of one layer must not import each other."
+              },
+              {
+                "regex": "^@/(entities)/[^/]+/",
+                "message": "Feature-Sliced Design: import a slice through its public API (index.ts), e.g. @/entities/book, not a file inside it."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/widgets/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages|widgets)(/|$)",
+                "message": "Feature-Sliced Design: a layer may import only from layers below it, and slices of one layer must not import each other."
+              },
+              {
+                "regex": "^@/(features|entities)/[^/]+/",
+                "message": "Feature-Sliced Design: import a slice through its public API (index.ts), e.g. @/entities/book, not a file inside it."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/pages/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages)(/|$)",
+                "message": "Feature-Sliced Design: a layer may import only from layers below it, and slices of one layer must not import each other."
+              },
+              {
+                "regex": "^@/(widgets|features|entities)/[^/]+/",
+                "message": "Feature-Sliced Design: import a slice through its public API (index.ts), e.g. @/entities/book, not a file inside it."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/app/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(pages|widgets|features|entities)/[^/]+/",
+                "message": "Feature-Sliced Design: import a slice through its public API (index.ts), e.g. @/entities/book, not a file inside it."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "app/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^@/(app|pages|widgets|features|entities)/[^/]+/",
+                "message": "Feature-Sliced Design: import a slice through its public API (index.ts), e.g. @/entities/book, not a file inside it."
+              },
+              {
+                "regex": "^\\.\\./\\.\\./",
+                "message": "Feature-Sliced Design: relative imports stay inside the slice; reach other slices or layers through @/<layer>/<slice>."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

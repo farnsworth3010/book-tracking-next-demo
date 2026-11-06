@@ -1,4 +1,4 @@
-import type { Book } from '@/features/books/schema'
+import type { Book } from '@/entities/book'
 
 export function makeBook(overrides: Partial<Book> = {}): Book {
   return { id: '1', title: 'Dune', author: 'Frank Herbert', status: 'want', pages: 412, notes: '', ...overrides }
